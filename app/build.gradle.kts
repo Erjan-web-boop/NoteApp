@@ -44,6 +44,7 @@ android {
 
 dependencies {
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.auth.ktx)
     val nav_version = "2.7.7"
     val lottieVersion = "3.4.0"
     val room_version = "2.6.1"
@@ -54,6 +55,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
