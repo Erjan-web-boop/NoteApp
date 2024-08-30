@@ -45,6 +45,7 @@ android {
 dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore)
     val nav_version = "2.7.7"
     val lottieVersion = "3.4.0"
     val room_version = "2.6.1"
