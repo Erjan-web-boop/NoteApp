@@ -26,6 +26,8 @@ class onBoardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentOnBoardBinding.inflate(inflater,container,false)
+        sharedPreferences = PreferenceHelper()
+        sharedPreferences.unit(requireContext())
         return binding.root
     }
 
@@ -36,18 +38,18 @@ class onBoardFragment : Fragment() {
         setupListener2()
         setupTabLayout()
         binding.tvWork.setOnClickListener {
-            findNavController().navigate(R.id.action_onBoardFragment_to_noteAppFragment)
-
+            sharedPreferences.onBoardShow = true // Устанавливаем флаг после завершения онбординга
+            findNavController().navigate(R.id.action_onBoardFragment_to_signInFragment)
         }
     }
 
-    private fun setupListener2()= with(binding.vpViewpager2) {
-        registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
+    private fun setupListener2() = with(binding.vpViewpager2) {
+        registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                if (position == 2){
+                if (position == 2) {
                     binding.tvWork.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.tvWork.visibility = View.INVISIBLE
                 }
             }
@@ -58,22 +60,21 @@ class onBoardFragment : Fragment() {
         binding.vpViewpager2.adapter = onBoardAdapter(this)
     }
 
-    private fun setupListener()= with(binding.vpViewpager2) {
-        registerOnPageChangeCallback(object:ViewPager2.OnPageChangeCallback(){
+    private fun setupListener() = with(binding.vpViewpager2) {
+        registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                if(position == 2){
+                if (position == 2) {
                     binding.tvSkip.visibility = View.INVISIBLE
-                }else{
+                } else {
                     binding.tvSkip.visibility = View.VISIBLE
                 }
             }
         })
-        binding.tvSkip.setOnClickListener{
-            if(currentItem < 3)
+        binding.tvSkip.setOnClickListener {
+            if (currentItem < 3)
                 setCurrentItem(currentItem + 2, true)
         }
-
     }
 
     private fun setupTabLayout() {
@@ -108,5 +109,4 @@ class onBoardFragment : Fragment() {
             }
         })
     }
-
 }
