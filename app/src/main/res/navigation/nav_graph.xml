@@ -52,6 +52,9 @@
             app:enterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_right"
             app:exitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_noteAppFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -66,5 +69,9 @@
         android:id="@+id/chatFragment"
         android:name="com.example.noteapp.ui.fragments.chat.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_noteAppFragment"
+            app:destination="@id/noteAppFragment" />
+    </fragment>
 </navigation>

@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import com.example.noteapp.databinding.FragmentNoteAppBinding
 import com.example.noteapp.interfaces.OnClickItem
 import com.example.noteapp.ui.adapter.NoteAdapter
 import com.example.noteapp.utils.PreferenceHelper
+import com.google.android.material.navigation.NavigationView
 
 
 class NoteAppFragment : Fragment(),OnClickItem{
@@ -25,6 +28,10 @@ class NoteAppFragment : Fragment(),OnClickItem{
     private var isLinearLayout = true
     private lateinit var sharedPreferences: PreferenceHelper
     private var isIcon1 = true
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+    private lateinit var toggle: ActionBarDrawerToggle
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,10 +46,26 @@ class NoteAppFragment : Fragment(),OnClickItem{
 
         sharedPreferences = PreferenceHelper().apply {
             unit(requireContext())}
-
         initialize()
         setupListener()
         getData()
+
+        drawerLayout = binding.drawerLayout
+        navView = binding.navigationView
+        binding.ivMenu.setOnClickListener {
+            drawerLayout.openDrawer(navView)
+        }
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.chat -> {
+                    findNavController().navigate(R.id.action_noteAppFragment_to_chatFragment)
+                    drawerLayout.closeDrawer(navView)
+                    true
+                }
+                else -> false
+            }
+        }
 
         binding.ivShape.setOnClickListener{
             toggleLayout()
@@ -54,7 +77,9 @@ class NoteAppFragment : Fragment(),OnClickItem{
         } else {
             binding.rvNote.layoutManager = GridLayoutManager(requireContext(), 2)
         }
+
     }
+
 
     private fun toggleIcon(){
         if(isIcon1){
@@ -113,4 +138,7 @@ class NoteAppFragment : Fragment(),OnClickItem{
             val action = NoteAppFragmentDirections.actionNoteAppFragmentToNoteDetailFragment(noteModel.id)
             findNavController().navigate(action)
     }
+
+
+
 }
