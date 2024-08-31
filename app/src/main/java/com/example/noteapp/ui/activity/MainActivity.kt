@@ -1,21 +1,20 @@
 package com.example.noteapp.ui.activity
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
-import android.text.TextUtils.replace
-import androidx.activity.enableEdgeToEdge
+import android.Manifest
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.noteapp.R
 import com.example.noteapp.databinding.ActivityMainBinding
-import com.example.noteapp.ui.fragments.note.NoteAppFragment
-import com.example.noteapp.ui.fragments.onboard.onBoardFragment
 import com.example.noteapp.utils.PreferenceHelper
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.ktx.auth
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +40,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             Enter()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                requestNotificationPermission()
+            }
+        }
     }
 
     private fun Enter() {
@@ -55,11 +61,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_NOTIFICATION_PERMISSION
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_NOTIFICATION_PERMISSION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Разрешение предоставлено
+                } else {
+                    // Разрешение отклонено
+                }
+            }
+        }
+    }
+
     override fun onBackPressed() {
         if (navController.currentDestination?.id == R.id.noteAppFragment) {
             finish()
         } else {
             super.onBackPressed()
         }
+    }
+
+    companion object {
+        private const val REQUEST_NOTIFICATION_PERMISSION = 1001
     }
 }
